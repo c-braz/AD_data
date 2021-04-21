@@ -1,0 +1,20 @@
+
+Active Directory uses contianer and Leaf Objects that are linked by attributes defined in the AD schema. The Objects can be linked together by attributes attributes like "Member", "Memeberof", "Distinguishednames". 
+
+Being able to display this data in a way that reveals the nested relationships is useful for auditing. 
+
+#Example user
+Distiguishedname: CN=jon,OU=users,DC=domain,DC=local
+memberof: CN=jons,OU=groups,DC=domain,DC=local
+memberof: CN=domain users,OU=buitin,DC=domain,DC=local
+objectclass: user
+
+Distiguishedname: CN=people,OU=groups,DC=domain,DC=local
+member: CN=jons,OU=groups,DC=domain,DC=local
+objectclass: group
+
+Distiguishedname: CN=jons,OU=groups,DC=domain,DC=local
+member: CN=jon,OU=users,DC=domain,DC=local
+memberof: CN=people,OU=groups,DC=domain,DC=local
+objectclass: group
+

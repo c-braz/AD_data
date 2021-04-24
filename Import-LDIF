@@ -1,0 +1,37 @@
+Function Import-LDIF{
+#inputs raw LDIF file as a string and converts it into a Hashtable
+#This can be easily converted to JSON by sending to ConvertTo-Json
+    param(
+    [parameter(mandatory=$true)]
+    [string]$file
+    )
+    $rawldif = Get-Content -Raw $file
+    $LFonly = $rawldif -replace "`r`n","`n"
+    $objects = $LFonly -split "`n`n"
+    $arrays = @()
+    foreach($object in $objects){
+        $lines = $object -split "`n"
+        $i= $lines.count - 1
+        $dict = @{}
+        while($i -ge 0){
+             $line = $lines[$i]
+             if(!($line.length -lt 1)){
+                 if($line[0] -eq " "){
+                      $lines[$i-1] = $lines[$i-1] + $line.trimstart(" ")
+                 }
+                 else{
+                      $key,$value = $line.replace(": ",';').split(';')
+                      if($dict[$key.trimend(":")]){
+                          [array]$dict[$key.trimend(":")] += $value
+                      }
+                      else{
+                          $dict[$key.trimend(":")] = $value
+                      }
+                 }
+             }
+             $i--
+        }
+        $arrays += $dict
+   }
+   $arrays
+}
